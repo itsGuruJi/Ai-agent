@@ -72,3 +72,66 @@ Ai-agent/
 ├── requirements.txt       # Python dependencies
 ├── LICENSE                # MIT license
 └── README.md              # Project documentation (this file)
+
+
+🧩 Setup Instructions
+1️⃣ Clone this repo
+git clone https://github.com/itsGuruJi/Ai-agent.git
+cd Ai-agent
+
+2️⃣ Create and activate virtual environment
+python -m venv venv
+venv\Scripts\activate    # (for Windows)
+# OR
+source venv/bin/activate # (for macOS/Linux)
+
+3️⃣ Install dependencies
+pip install -r requirements.txt
+
+4️⃣ Configure environment variables
+
+Copy the example file:
+
+cp .env.example .env
+
+
+Then open .env and fill in your actual credentials:
+
+OPENAI_API_KEY=your_openai_or_openrouter_key
+SUPABASE_URL=your_supabase_url
+SUPABASE_SERVICE_ROLE_KEY=your_service_key
+SUPABASE_ANON_KEY=your_anon_key
+JWT_SECRET=your_jwt_secret
+
+🧠 Running the Project
+▶️ Start FastAPI backend
+uvicorn main:app --reload
+
+
+Backend runs on → http://127.0.0.1:8000
+
+▶️ Start Streamlit dashboard
+streamlit run dashboard.py
+
+
+Dashboard opens on → http://localhost:8501
+
+📊 Dashboard Features
+
+Sync Google Sheets → imports fresh data into Supabase
+
+Run AI Agent → auto-analyze your org’s data
+
+View Metrics → Employees, Departments, Avg Salary, Top City
+
+Ask AI → Query insights from your dataset in plain English
+
+Plotly Charts → Interactive visual analytics
+
+🧠 Example AI Prompts
+"What is the highest-paid department?"
+"Which city has the most employees?"
+"What’s the average salary per department?"
+
+
+The system uses GPT reasoning to answer from Supabase data.
