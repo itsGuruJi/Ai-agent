@@ -7,7 +7,11 @@ import plotly.express as px
 # ==============================
 # CONFIGURATION
 # ==============================
-API_URL = "http://127.0.0.1:8000"
+# API_URL = "http://127.0.0.1:8000"
+import os
+
+API_URL = os.getenv("API_URL", "http://127.0.0.1:8000")  # fallback for local dev
+
 JWT_TOKEN = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJ1c2VyXzEyMyIsImVtYWlsIjoidGVzdEBleGFtcGxlLmNvbSIsInJvbGUiOiJhdXRoZW50aWNhdGVkIiwib3JnX2lkIjoib3JnXzAwMSIsImV4cCI6MTc2MjQ0NzcwOSwiaWF0IjoxNzYyNDQ0MTA5LCJuYmYiOjE3NjI0NDQxMDl9.hlA372jFnTVkr_1lfHp7-JR_4udBFl8wyvdA-9oXAsQ"
 ORG_ID = "org_001"
 SPREADSHEET_ID = "1uFI5pW8EV2D02MKbdsH6NCUk2Qb1wB-i9iUC5aL0_jw"
