@@ -43,8 +43,7 @@
 #     except Exception as e:
 #         raise RuntimeError(f"An unexpected error occurred during sheet read: {e}")
 
-
-
+# render version 
 # google_sync.py
 import os
 import json
@@ -53,42 +52,30 @@ import gspread
 from gspread.exceptions import SpreadsheetNotFound, WorksheetNotFound, APIError
 from typing import List, Dict, Any
 
+# Google Sheets API scope
 SCOPES = ["https://www.googleapis.com/auth/spreadsheets.readonly"]
 
 def get_gspread_client() -> gspread.client.Client:
     """
     Initializes and returns an authorized gspread client.
-    Supports both local file-based credentials and environment-based JSON (for Render).
+    Uses GOOGLE_CREDS_JSON environment variable only (Render deployment safe).
     """
-    creds = None
+    google_creds_json = os.getenv("GOOGLE_CREDS_JSON")
+
+    if not google_creds_json:
+        raise EnvironmentError(
+            "Missing GOOGLE_CREDS_JSON in environment. "
+            "Set it in Render Dashboard → Environment → Add Environment Variable."
+        )
 
     try:
-        # ✅ 1. First try environment variable (Render deployment)
-        google_creds_json = os.getenv("GOOGLE_CREDS_JSON")
-
-        if google_creds_json:
-            try:
-                creds_dict = json.loads(google_creds_json)
-                creds = Credentials.from_service_account_info(creds_dict, scopes=SCOPES)
-                return gspread.authorize(creds)
-            except json.JSONDecodeError:
-                raise EnvironmentError("Invalid GOOGLE_CREDS_JSON format — must be valid JSON.")
-
-        # ✅ 2. Fallback: Local file-based credentials (for local dev)
-        sa_path = os.getenv("GOOGLE_SA_JSON_PATH", "google_creds.json")
-
-        if not os.path.exists(sa_path):
-            raise FileNotFoundError(f"Service Account file not found at path: {sa_path}")
-
-        creds = Credentials.from_service_account_file(sa_path, scopes=SCOPES)
+        creds_dict = json.loads(google_creds_json)
+        creds = Credentials.from_service_account_info(creds_dict, scopes=SCOPES)
         return gspread.authorize(creds)
-
-    except FileNotFoundError as e:
-        raise EnvironmentError(f"Critical Error: Service Account file access failed. {e}")
+    except json.JSONDecodeError:
+        raise EnvironmentError("Invalid GOOGLE_CREDS_JSON format — must be valid JSON.")
     except Exception as e:
-        raise EnvironmentError(f"Failed to authorize Google Sheets client. Error: {e}")
-
-
+        raise EnvironmentError(f"Failed to authorize Google Sheets client: {e}")
 
 def read_sheet_values(spreadsheet_id: str, sheet_name: str = "Sheet1") -> List[Dict[str, Any]]:
     """
